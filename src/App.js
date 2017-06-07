@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
+import Announcement from './Announcement';
+import ResetButton from './ResetButton';
 
 class App extends Component {
 
@@ -9,6 +11,7 @@ class App extends Component {
     this.state = {
       turn: 'X',
       gameEnded: false,
+      winner: null,
       board: Array(9).fill(''),
       totalMoves: 0
     }
@@ -53,6 +56,11 @@ class App extends Component {
      }
     }
 
+  resetBoard(){
+
+      window.location.reload();
+    }
+
   checkWinner(){
     var moves = [[0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6], [0,1,2], [3,4,5], [6,7,8]];
     var board = this.state.board;
@@ -63,17 +71,19 @@ class App extends Component {
       {
         if(board[moves[i][0]] == board[moves[i][1]] && board[moves[i][0]] == board[moves[i][2]])
         {
-          return board[moves[i][0]];
+          return board[moves[i][0]] + " wins!";
         }
         else if (this.state.totalMoves == 8)
         {
-          return 'draw';
+          return 'We have a draw.';
         }
       }
 
 
     }
   }
+
+
 
   render() {
     return (
@@ -92,6 +102,8 @@ class App extends Component {
             <div className="square" data-square="7"></div>
             <div className="square" data-square="8"></div>
         </div>
+        <Announcement winner={this.state.winner}/>
+        <ResetButton reset={this.resetBoard.bind(this)}/>
       </div>
     );
   }
