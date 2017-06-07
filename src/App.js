@@ -8,7 +8,7 @@ import ResetButton from './ResetButton';
 
 class App extends Component {
 
-  //initialize, always starts with X
+  //initialize, game always starts with X
   constructor(){
     super();
     this.state = {
@@ -20,14 +20,20 @@ class App extends Component {
     }
   }
 
-
+  //game logic
   clicked(event){
+    //are we still playing?
+    //basically disable clicks after game is over
     if (this.state.gameEnded == false)
     {
-      this.state.board[event.target.dataset.square]=this.state.turn;
+      //array item number
+      var num=event.target.dataset.square;
+      //update array's item
+      this.state.board[num]=this.state.turn;
+      //is the target square empty?
       if (event.target.innerText == ''){
         //display X or o's on board.
-        event.target.innerText = this.state.turn;
+        event.target.innerText = this.state.board[num];
         var movesSoFar = this.state.totalMoves;
         //increment number of moves
         movesSoFar++;
@@ -35,14 +41,14 @@ class App extends Component {
         if (this.state.turn === 'X'){
             this.setState({
               turn: 'O',
-              board: this.state.board,
+              //board: this.state.board,
               totalMoves: movesSoFar
             })
           }
         else {
            this.setState({
              turn: 'X',
-             board: this.state.board,
+             //board: this.state.board,
              totalMoves: movesSoFar
           })
         }
@@ -55,19 +61,20 @@ class App extends Component {
     }
 
   resetBoard(){
+    window.location.reload();
+  }
 
-      window.location.reload();
-    }
 
   checkWinner(){
 
+    //winning combos
     var moves = [[0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6], [0,1,2], [3,4,5], [6,7,8]];
     var board = this.state.board;
     for (let i=0; i<moves.length; i++){
       // no empty winner matches
       if (board[moves[i][0]] === 'X' || board[moves[i][0]] === 'O')
       {
-
+        //do we have a winning combo?
         if(board[moves[i][0]] == board[moves[i][1]] && board[moves[i][0]] == board[moves[i][2]])
         {
 
@@ -95,8 +102,6 @@ class App extends Component {
       )
     }
   }
-
-
 
   render() {
     return (
