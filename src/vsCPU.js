@@ -28,10 +28,8 @@ class App extends Component {
     {
       //array item number
       var num=event.target.dataset.square;
-      //update array's item if its blank
-      if (this.state.board[num]== ''){
-        this.state.board[num]=this.state.turn;
-      }
+      //update array's item
+      this.state.board[num]=this.state.turn;
       //is the target square empty?
       if (event.target.innerText == ''){
         //display X or o's on board.
