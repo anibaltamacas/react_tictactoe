@@ -40,7 +40,11 @@ class App extends Component {
             })
           }
 
-          //basic ai
+        //did we win in that last move? otherwise let CPU play
+        var dwin=this.checkWinner();
+        if (!dwin)
+        {
+        //basic ai
 
           var flaggy=false;
           //don't try to play after game is over
@@ -62,7 +66,7 @@ class App extends Component {
               }
             }
           }
-
+        }
         //human player implementation
         /*else {
            this.setState({
@@ -101,7 +105,7 @@ class App extends Component {
         //do we have a winning combo?
         if(board[moves[i][0]] == board[moves[i][1]] && board[moves[i][0]] == board[moves[i][2]])
         {
-              //who won? set message and colors for winner
+            //who won? set message and colors for winner
             if (board[moves[i][0]]=='X')
             {
               this.setState(
@@ -113,6 +117,7 @@ class App extends Component {
             )
            }
 
+
           else {
             this.setState(
             {
@@ -122,9 +127,8 @@ class App extends Component {
             }
           )
           }
-
-          return board[moves[i][0]];
-
+          //return board[moves[i][0]];
+          return true;
         }
 
       }
@@ -138,6 +142,7 @@ class App extends Component {
           winner: "We have a draw",
           style: 'draw'
         }
+
       )
     }
   }
