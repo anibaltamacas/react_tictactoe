@@ -1,4 +1,4 @@
-//Tic Tac Toe
+//Tic Tac Toe (basic AI version)
 //Anibal Tamacas
 
 import React, { Component } from 'react';
@@ -16,54 +16,76 @@ class App extends Component {
       gameEnded: false,
       winner: null,
       board: Array(9).fill(''),
-      totalMoves: 0
+      totalMoves: 0,
+      style: 'field'
     }
   }
 
-  //game logic
-  clicked(event){
+   playGame(index){
     //are we still playing?
     //basically disable clicks after game is over
     if (this.state.gameEnded == false)
     {
-      //array item number
-      var num=event.target.dataset.square;
       //update array's item if its blank
-      if (this.state.board[num]== ''){
-        this.state.board[num]=this.state.turn;
-      }
-      //is the target square empty?
-      if (event.target.innerText == ''){
-        //display X or o's on board.
-        event.target.innerText = this.state.board[num];
-        var movesSoFar = this.state.totalMoves;
+      if (this.state.board[index]== ''){
+        this.state.board[index]=this.state.turn;
         //increment number of moves
+        var movesSoFar = this.state.totalMoves;
         movesSoFar++;
 
         if (this.state.turn === 'X'){
             this.setState({
               turn: 'O',
-              //board: this.state.board,
               totalMoves: movesSoFar
             })
           }
-        else {
+
+          //basic ai
+
+          var flaggy=false;
+          //don't try to play after game is over
+          if (movesSoFar<9)
+          {
+            while (flaggy==false)
+            {
+              //choose random spot on array and see if its empty
+              //if not empty rinse and repeat
+              var rand_n = Math.floor(Math.random() * 9) + 0;
+              if (this.state.board[rand_n]==''){
+                this.state.board[rand_n]='O';
+                flaggy=true;
+                movesSoFar++;
+                this.setState({
+                  turn: 'X',
+                  totalMoves: movesSoFar
+               })
+              }
+            }
+          }
+
+        //human player implementation
+        /*else {
            this.setState({
              turn: 'X',
-             //board: this.state.board,
              totalMoves: movesSoFar
           })
-        }
+        }*/
+      }
 
-        this.checkWinner();
-
-
-       }
-     } //end if gameEnded
+      this.checkWinner();
     }
+  }
 
   resetBoard(){
-    window.location.reload();
+    //set everything to default
+    this.setState({
+      turn: 'X',
+      gameEnded: false,
+      winner: null,
+      board: Array(9).fill(''),
+      totalMoves: 0,
+      style: 'field'
+    })
   }
 
 
@@ -79,13 +101,27 @@ class App extends Component {
         //do we have a winning combo?
         if(board[moves[i][0]] == board[moves[i][1]] && board[moves[i][0]] == board[moves[i][2]])
         {
-
-            this.setState(
+              //who won? set message and colors for winner
+            if (board[moves[i][0]]=='X')
+            {
+              this.setState(
               {
                 gameEnded: true,
                 winner: board[moves[i][0]] + " wins!",
+                style: 'won'
               }
             )
+           }
+
+          else {
+            this.setState(
+            {
+              gameEnded: true,
+              winner: board[moves[i][0]] + " wins!",
+              style: 'lost'
+            }
+          )
+          }
 
           return board[moves[i][0]];
 
@@ -100,31 +136,29 @@ class App extends Component {
         {
           gameEnded: true,
           winner: "We have a draw",
+          style: 'draw'
         }
       )
     }
   }
 
   render() {
+
     return (
       <div id="game">
         <div id="head">
 
         </div>
-        <div id="board" onClick={(e)=>this.clicked(e)}>
-            <div className="field" data-square="0"></div>
-            <div className="field" data-square="1"></div>
-            <div className="field" data-square="2"></div>
-            <div className="field" data-square="3"></div>
-            <div className="field" data-square="4"></div>
-            <div className="field" data-square="5"></div>
-            <div className="field" data-square="6"></div>
-            <div className="field" data-square="7"></div>
-            <div className="field" data-square="8"></div>
+        <div id="board">
+          {
+            //map board array with board UI
+            this.state.board.map((cell, index) => {
+            return <div onClick={() => this.playGame(index)} data-cell-id={index} className={this.state.style}>{cell}</div>;
+          })}
         </div>
-        <Announcement winner={this.state.winner}/>
         <ResetButton reset={this.resetBoard.bind(this)}/>
-      </div>
+        <Announcement winner={this.state.winner}/>
+        </div>
     );
   }
 }

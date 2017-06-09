@@ -28,15 +28,19 @@ class App extends Component {
     {
       //array item number
       var num=event.target.dataset.square;
-      //update array's item
-      this.state.board[num]=this.state.turn;
+      //update array's item if its blank
+      if (this.state.board[num]== ''){
+        this.state.board[num]=this.state.turn;
+      }
       //is the target square empty?
       if (event.target.innerText == ''){
         //display X or o's on board.
+
         event.target.innerText = this.state.board[num];
         var movesSoFar = this.state.totalMoves;
         //increment number of moves
         movesSoFar++;
+
 
         if (this.state.turn === 'X'){
             this.setState({
@@ -122,6 +126,7 @@ class App extends Component {
         </div>
         <Announcement winner={this.state.winner}/>
         <ResetButton reset={this.resetBoard.bind(this)}/>
+
       </div>
     );
   }
